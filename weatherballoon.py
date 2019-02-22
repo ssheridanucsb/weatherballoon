@@ -31,7 +31,7 @@ while(True):
     compass = fedora.get_compass()
 
     #get gyroscope
-    gyro = fedora.get_gyoscope()
+    gyro = fedora.get_gyroscope()
     gyro_pitch = gyro.get('pitch')
     gyro_roll = gyro.get('roll')
     gyro_yaw = gyro.get('yaw')
