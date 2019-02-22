@@ -1,19 +1,31 @@
-from sense_hat import SenseHat
-import time
-import csv
+from sense_hat import SenseHat #for sensors
+from picamera import PiCamera   #for camera
 
-fedora = SenseHat()
+import time #for sleep
+import csv #for writing data
 #main code for recording atmospheric conditions
 
+fedora = SenseHat()
+camera = PiCamera()
+
+
+#define the fields/headers of the csv
 fields = ['humidity', 'temp', 'temp_from_humidity', 'temp_from_pressure', 'pressure',
 'orientation_pitch', 'orientation_roll', 'orientation_yaw', 'compass', 'gyro_pitch',
 'gyro_roll', 'gyro_yaw', 'accelerometer_pitch', 'accelerometer_roll', 'accelerometer_yaw']
 
+#create the csv
 with open("atmosphere.csv", 'w') as atm:
     data_writer = csv.DictWriter(atm,  fieldnames=fields)
     data_writer.writeheader()
 
+#count is used to take photo on every other iteration of loop
+#this gives the camera a two second cool down instead of one
+count = 1
 while(True):
+
+    if count % 2 == 0:
+        camera.capture('photos/image%s.jpg' % (count - 1))
 
     #enviornmental sensors
     humidity = fedora.get_humidity()
@@ -52,4 +64,6 @@ while(True):
         'gyro_roll':gyro_roll, 'gyro_yaw':gyro_yaw, 'accelerometer_pitch':accelerometer_pitch,
         'accelerometer_roll':accelerometer_roll, 'accelerometer_yaw':accelerometer_yaw})
 
+    #increase count and sleep 1 second
+    count = count + 1
     time.sleep(1)
